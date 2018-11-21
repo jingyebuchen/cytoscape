@@ -1,0 +1,76 @@
+<html lang="en">
+<head>
+ 
+    <meta charset="UTF-8">
+    <title>Learning Cytoscape.js</title>
+    <style type="text/css">
+        /* cytoscape graph */
+        #cy {
+            height: 600px;
+            width: 800px;
+            background-color: #f9f9f9;
+        }
+    </style>
+    <script src="http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/cytoscape/2.3.16/cytoscape.min.js"></script>
+    <script src="https://cdn.bootcss.com/cytoscape/3.2.3/cytoscape.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/arbor/0.91.0/arbor.js"></script>
+</head>
+<body>
+<div id="cy"></div>
+</body>
+<script type="text/javascript" charset="UTF-8">
+ 
+    $(function(){
+        cytoscape({
+            container: document.getElementById('cy'),
+            style: [
+                { selector: 'node[label = "药物"]',
+                    css: {'background-color': '#6FB1FC', 'content': 'data(name)'}
+                },
+                { selector: 'node[label = "疾病"]',
+                    css: {'background-color': '#F5A45D', 'content': 'data(title)'}
+                },
+                { selector: 'edge',
+                    css: {
+                        'content': 'data(relationship)',
+                        'target-arrow-shape': 'triangle',
+                        'color':'red',
+                        'targetArrowColor':'blue',
+                        'line-color':'green'
+                    }
+                }
+            ],
+            charset: 'UTF-8',
+//            elements: ele,
+            layout: { name: 'grid'}
+        });
+    });
+    var cy = $("#cy").cytoscape("get");
+ 
+ 
+    for(i=0;i<nodes.size();i++){
+        var tmpId = nodes.get(i).getid();
+        var tmpName = nodes.get(i).getname();
+        var tmpType = nodes.get(i).getWeight();
+        cy.add({group: "nodes", data: { id: tmpId, name: tmpName , label: tmpType}});
+    }
+    for(i=0;i<edges.size();i++){
+        var tmpSource=edges.get(i).getSource();
+        var tmpTarget=edges.get(i).getTarget();
+        cy.add({ group: "edges", data: { source: tmpSource, target: tmpTarget } });
+    }
+    options = {
+        name: 'circle',
+        fit: true, // whether to fit the viewport to the graph
+        ready: undefined, // callback on layoutready
+        stop: undefined, // callback on layoutstop
+        rStepSize: 10, // the step size for increasing the radius if the nodes don't fit on screen
+        padding: 30, // the padding on fit
+        startAngle: 3/2 * Math.PI, // the position of the first node
+        counterclockwise: false // whether the layout should go counterclockwise (true) or clockwise (false)
+    };
+    cy.layout( options );
+</script>
+</html>
